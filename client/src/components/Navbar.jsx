@@ -29,7 +29,7 @@ function Navbar() {
             </li>
             <li>
               <Link
-                to="/"
+                to="/login"
                 onClick={() => {
                   logout();
                 }}

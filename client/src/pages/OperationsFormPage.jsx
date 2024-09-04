@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import OperationSelector from "../components/OperationSelector";
 import Calculator from "../components/Calculator";
 import { useOperations } from "../context/OperationsContext";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Asegúrate de tener importado Bootstrap
 
 function OperationsFormPage() {
   const { createOperation } = useOperations();
   const [operationType, setOperationType] = useState("");
   const [values, setValues] = useState([]);
-  const [operationLabel, setOperationLabel] = useState(""); // Para mostrar la operación en el label
-  const [result, setResult] = useState(""); // Para mostrar el resultado
+  const [operationLabel, setOperationLabel] = useState(""); 
+  const [result, setResult] = useState(""); 
 
   const handleOperationSelect = (type) => {
     setOperationType(type);
@@ -19,8 +20,6 @@ function OperationsFormPage() {
 
   const handleNewOperationAfteSelectType = () => {
     setValues([]);
-    //setOperationLabel("");
-    //setResult(""); // Resetea el label al seleccionar una nueva operación
   };
 
   const handleNewOperation = () => {
@@ -46,7 +45,6 @@ function OperationsFormPage() {
       const response = await createOperation(record);
       console.log("Response: ", response)
       if (response && response.result !== undefined) {
-        // Generar el label de la operación en función del tipo de operación
         const formattedOperation = formatOperationLabel(operationType, values, response.result);
         setOperationLabel(formattedOperation);
         setResult(response.result);
@@ -79,36 +77,42 @@ function OperationsFormPage() {
   };
 
   return (
-    <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md">
-      {!operationType ? (
-        <OperationSelector onSelect={handleOperationSelect} />
-      ) : (
-        <>
-          <Calculator
-            operation={operationType}
-            setValues={setValues}
-            values={values}
-            onSubmit={onSubmit}
-          />
-          <div className="mt-4 text-white">
-            <p className="text-lg font-bold">Operation:</p>
-            <p>{operationLabel}</p>
-            <p className="text-lg font-bold">Result:</p>
-            <input
-              type="text"
-              value={result}
-              readOnly
-              className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md"
-            />
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="bg-dark p-4 rounded">
+            {!operationType ? (
+              <OperationSelector onSelect={handleOperationSelect} />
+            ) : (
+              <>
+                <Calculator
+                  operation={operationType}
+                  setValues={setValues}
+                  values={values}
+                  onSubmit={onSubmit}
+                />
+                <div className="mt-4 text-white">
+                  <p className="text-lg font-weight-bold">Operation:</p>
+                  <p>{operationLabel}</p>
+                  <p className="text-lg font-weight-bold">Result:</p>
+                  <input
+                    type="text"
+                    value={result}
+                    readOnly
+                    className="w-100 bg-secondary text-white px-4 py-2 rounded"
+                  />
+                </div>
+                <button
+                  className="mt-4 btn btn-success w-100"
+                  onClick={handleNewOperation}
+                >
+                  Choose Another Operation
+                </button>
+              </>
+            )}
           </div>
-          <button
-            className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
-            onClick={handleNewOperation}
-          >
-            Choose Another Operation
-          </button>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 }

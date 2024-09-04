@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from 'react-bootstrap';
 
 function OperationSelector({ onSelect }) {
   const operations = [
@@ -16,12 +17,13 @@ function OperationSelector({ onSelect }) {
       <ul>
         {operations.map((operation) => (
           <li key={operation.type}>
-            <button
-              className="mb-2 px-4 py-2 bg-blue-500 text-white rounded"
+            <Button
+              className="mb-2"
+              variant="primary"
               onClick={() => onSelect(operation.type)}
             >
               {operation.label}
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
