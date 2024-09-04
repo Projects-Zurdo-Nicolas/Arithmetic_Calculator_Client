@@ -15,13 +15,13 @@ function RecordsPage() {
     const fetchRecords = async () => {
       try {
         const res = await getRecords(currentPage, perPage);
-        console.log("Respuesta del backend desde RecordPage:", res.data); // Para depuración
-        setOriginalOperations(res.data.data); // Almacena los datos originales
-        setFilteredOperations(res.data.data); // Inicializa con los datos obtenidos del backend
-        setTotalPages(res.data.totalPages); // Actualiza el total de páginas
+        console.log("Respuesta del backend desde RecordPage:", res.data);
+        setOriginalOperations(res.data.data);
+        setFilteredOperations(res.data.data);
+        setTotalPages(res.data.totalPages);
       } catch (error) {
         console.error("Error fetching records:", error);
-        setOriginalOperations([]); // Manejar errores asegurando un array vacío
+        setOriginalOperations([]);
         setFilteredOperations([]);
         setTotalPages(0);
       }
@@ -33,26 +33,16 @@ function RecordsPage() {
   useEffect(() => {
     let filtered = [...originalOperations];
 
-    /*if (searchTerm) {
-      filtered = filtered.filter((operation) =>
-        Object.values(operation).some((value) =>
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    }*/
     if (searchTerm) {
       filtered = filtered.filter((operation) => {
-        // Aquí verificamos si 'searchTerm' está en cualquier valor del objeto
         return Object.values(operation).some((value) => {
           if (typeof value === "object") {
-            // Si el valor es un objeto, verificamos en sus propiedades
             return Object.values(value).some((nestedValue) =>
               String(nestedValue)
                 .toLowerCase()
                 .includes(searchTerm.toLowerCase())
             );
           } else {
-            // Verificamos en el valor directamente
             return String(value)
               .toLowerCase()
               .includes(searchTerm.toLowerCase());
@@ -75,7 +65,6 @@ function RecordsPage() {
 
     setFilteredOperations(filtered);
   }, [searchTerm, sortedBy, originalOperations]);
-  // Añade 'originalOperations' a las dependencias
 
   const handleDelete = async (id) => {
     try {

@@ -19,18 +19,19 @@ export const useOperations = () => {
 
 export function OperationProvider({ children }) {
   const [operations, setOperations] = useState([]);
+  const [user, setUser] = useState(null);
 
   const getRecords = async (currentPage = 1, perPage = 2) => {
     try {
       const res = await getRecordsRequest(currentPage, perPage);
       console.log("Respuesta del backend:", res);
       if (res && res.data) {
-        console.log("Respuesta del backend:", res.data); // Para depuración
-        setOperations(res.data); // Puedes actualizar el estado si deseas mantener los registros globalmente
-        return res; // Retorna la respuesta para que sea usada en RecordsPage.jsx
+        console.log("Respuesta del backend:", res.data);
+        setOperations(res.data);
+        return res;
       } else {
         console.error("Respuesta inválida de getRecordsRequest:", res);
-        return undefined; // Retornar undefined en caso de error
+        return undefined;
       }
     } catch (error) {
       console.log(error);
@@ -43,16 +44,15 @@ export function OperationProvider({ children }) {
       console.log("Response from server:", response.data);
 
       if (response && response.data) {
-        console.log("Respuesta del backend:", response.data); // Para depuración
-        return response.data; // Retorna la respuesta para que sea usada en RecordsPage.jsx
+        console.log("Respuesta del backend:", response.data); 
+        return response.data;
       } else {
         console.error("Respuesta inválida de getRecordsRequest:", res);
-        return undefined; // Retornar undefined en caso de error
+        return undefined;
       }
     } catch (error) {
       console.error("Error saving record:", error);
       alert(`Error: ${error.response ? error.response.data.message : 'Unknown error occurred'}`);
-      // Manejar el error de la manera deseada
     }
   };
 
@@ -63,7 +63,6 @@ export function OperationProvider({ children }) {
         setOperations(operations.filter((operation) => operation._id !== id));
     } catch (error) {
       console.log(error);
-      //alert(`Error: ${error.response ? error.response.data.message : 'Unknown error occurred'}`);
     }
   };
 
