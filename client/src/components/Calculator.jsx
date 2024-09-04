@@ -19,12 +19,20 @@ function Calculator({ operation, setValues, values, onSubmit, result }) {
   };
 
   const handleEqualClick = () => {
-    let finalValues = [...values];
-    if (input !== "") {
-      finalValues = [...values, parseFloat(input)];
+    if (operation === "random_string") {
+      // Cuando la operación es 'random_string', envía los valores minValue y maxValue al backend
+      const finalValues = [parseFloat(minValue), parseFloat(maxValue)];
+      setValues(finalValues);
+      onSubmit(finalValues); // Enviar los valores al backend
+    } else {
+      // Para otras operaciones, maneja los valores del input
+      let finalValues = [...values];
+      if (input !== "") {
+        finalValues = [...values, parseFloat(input)];
+      }
+      setValues(finalValues);
+      onSubmit(finalValues); // Enviar todos los valores acumulados al backend
     }
-    setValues(finalValues);
-    onSubmit(finalValues); // Enviar todos los valores acumulados al backend
     setInput(""); // Resetea el input para una nueva operación
   };
 
@@ -53,20 +61,8 @@ function Calculator({ operation, setValues, values, onSubmit, result }) {
 
   return (
     <div className="mb-4">
-      <input
-        type="text"
-        value={input}
-        readOnly
-        className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md mb-4"
-        placeholder="Input"
-      />
-      {result !== null && (
-        <div className="bg-gray-800 text-white px-4 py-2 rounded-md mb-4">
-          {renderOperationLabel()}
-        </div>
-      )}
       {operation === "random_string" ? (
-        <div className="mb-4">
+        <>
           <input
             type="number"
             value={minValue}
@@ -81,8 +77,23 @@ function Calculator({ operation, setValues, values, onSubmit, result }) {
             placeholder="Max Value"
             className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md mb-2"
           />
-        </div>
-      ) : null}
+        </>
+      ) : (
+        <>
+          <input
+            type="text"
+            value={input}
+            readOnly
+            className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md mb-4"
+            placeholder="Input"
+          />
+          {result !== null && (
+            <div className="bg-gray-800 text-white px-4 py-2 rounded-md mb-4">
+              {renderOperationLabel()}
+            </div>
+          )}
+        </>
+      )}
       <div className="grid grid-cols-4 gap-2 mb-4">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
