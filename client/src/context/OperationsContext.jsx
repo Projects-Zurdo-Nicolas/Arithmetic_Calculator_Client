@@ -41,6 +41,14 @@ export function OperationProvider({ children }) {
     try {
       const response = await saveRecordRequest(operation);
       console.log("Response from server:", response.data);
+
+      if (response && response.data) {
+        console.log("Respuesta del backend:", response.data); // Para depuración
+        return response.data; // Retorna la respuesta para que sea usada en RecordsPage.jsx
+      } else {
+        console.error("Respuesta inválida de getRecordsRequest:", res);
+        return undefined; // Retornar undefined en caso de error
+      }
       // You can update the state or handle the response as needed
     } catch (error) {
       console.error("Error saving record:", error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function Calculator({ register, operation, setValues, values }) {
+function Calculator({ operation, setValues, values, onSubmit, result }) {
   const [input, setInput] = useState("");
   const [minValue, setMinValue] = useState(""); // Para valor aleatorio
   const [maxValue, setMaxValue] = useState(""); // Para valor aleatorio
@@ -10,44 +10,46 @@ function Calculator({ register, operation, setValues, values }) {
   };
 
   const handleOperationClick = (operation) => {
-    if (operation === "random_string") {
-      // No hacer nada en este caso
-    } else if (operation === "square_root") {
+    if (operation !== "random_string" && operation !== "square_root") {
       if (input !== "") {
-        setValues([parseFloat(input)]);
-        setInput("");
-      }
-    } else {
-      if (input !== "") {
-        setValues((prev) => [...prev, parseFloat(input)]);
-        setInput("");
+        setValues([...values, parseFloat(input)]);
+        setInput(""); // Resetea el input para el siguiente número
       }
     }
   };
 
   const handleEqualClick = () => {
-    if (operation === "random_string") {
-      if (minValue !== "" && maxValue !== "") {
-        setValues([parseFloat(minValue), parseFloat(maxValue)]);
-        setMinValue("");
-        setMaxValue("");
-      }
-    } else if (operation === "square_root") {
-      if (input !== "") {
-        setValues([parseFloat(input)]);
-        setInput("");
-      }
-    } else {
-      if (input !== "") {
-        setValues((prev) => [...prev, parseFloat(input)]);
-        setInput("");
-      }
+    let finalValues = [...values];
+    if (input !== "") {
+      finalValues = [...values, parseFloat(input)];
     }
+    setValues(finalValues);
+    onSubmit(finalValues); // Enviar todos los valores acumulados al backend
+    setInput(""); // Resetea el input para una nueva operación
   };
 
   useEffect(() => {
     console.log("Valores acumulados:", values);
   }, [values]);
+
+  const renderOperationLabel = () => {
+    switch (operation) {
+      case "addition":
+        return `${values.join(" + ")}${input ? " + " + input : ""} = ${result}`;
+      case "subtraction":
+        return `${values.join(" - ")}${input ? " - " + input : ""} = ${result}`;
+      case "multiplication":
+        return `${values.join(" * ")}${input ? " * " + input : ""} = ${result}`;
+      case "division":
+        return `${values.join(" / ")}${input ? " / " + input : ""} = ${result}`;
+      case "square_root":
+        return `√${values[0]} = ${result}`;
+      case "random_string":
+        return `V.min = ${minValue}  V.max = ${maxValue} = ${result}`;
+      default:
+        return "";
+    }
+  };
 
   return (
     <div className="mb-4">
@@ -58,6 +60,11 @@ function Calculator({ register, operation, setValues, values }) {
         className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md mb-4"
         placeholder="Input"
       />
+      {result !== null && (
+        <div className="bg-gray-800 text-white px-4 py-2 rounded-md mb-4">
+          {renderOperationLabel()}
+        </div>
+      )}
       {operation === "random_string" ? (
         <div className="mb-4">
           <input
@@ -86,36 +93,12 @@ function Calculator({ register, operation, setValues, values }) {
             {number}
           </button>
         ))}
-        {operation === "addition" && (
+        {["addition", "subtraction", "multiplication", "division"].includes(operation) && (
           <button
             className="bg-gray-700 text-white px-4 py-2 rounded"
             onClick={() => handleOperationClick(operation)}
           >
-            +
-          </button>
-        )}
-        {operation === "subtraction" && (
-          <button
-            className="bg-gray-700 text-white px-4 py-2 rounded"
-            onClick={() => handleOperationClick(operation)}
-          >
-            -
-          </button>
-        )}
-        {operation === "multiplication" && (
-          <button
-            className="bg-gray-700 text-white px-4 py-2 rounded"
-            onClick={() => handleOperationClick(operation)}
-          >
-            *
-          </button>
-        )}
-        {operation === "division" && (
-          <button
-            className="bg-gray-700 text-white px-4 py-2 rounded"
-            onClick={() => handleOperationClick(operation)}
-          >
-            /
+            {operation === "addition" ? "+" : operation === "subtraction" ? "-" : operation === "multiplication" ? "*" : "/"}
           </button>
         )}
         {operation === "square_root" && (
