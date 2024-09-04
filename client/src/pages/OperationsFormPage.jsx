@@ -53,6 +53,7 @@ function OperationsFormPage() {
       }
     } catch (error) {
       console.error("Error submitting data:", error);
+      alert(`Error: ${error.response ? error.response.data.message : 'Unknown error occurred'}`);
     }
     handleNewOperationAfteSelectType();
   };

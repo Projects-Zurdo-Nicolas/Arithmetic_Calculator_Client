@@ -6,7 +6,7 @@ function Navbar() {
 
   return (
     <nav className="bg-zinc-700 my-3 flex justify-between py-3 px-10 rounded-lg">
-      <h1 className="text-2xl font-bold">{isAuthenticated ? "WELCOME " + user.username + "!!" : "CALCULATOR APP"}</h1>
+      <h1 className="text-2xl font-bold">{isAuthenticated ? "Welcome " + user.username + " !" : "CALCULATOR APP"}</h1>
 
       <ul className="flex gap-x-2">
         {isAuthenticated ? (

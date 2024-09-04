@@ -49,10 +49,10 @@ export function OperationProvider({ children }) {
         console.error("Respuesta inválida de getRecordsRequest:", res);
         return undefined; // Retornar undefined en caso de error
       }
-      // You can update the state or handle the response as needed
     } catch (error) {
       console.error("Error saving record:", error);
-      // Handle the error accordingly
+      alert(`Error: ${error.response ? error.response.data.message : 'Unknown error occurred'}`);
+      // Manejar el error de la manera deseada
     }
   };
 
@@ -63,18 +63,9 @@ export function OperationProvider({ children }) {
         setOperations(operations.filter((operation) => operation._id !== id));
     } catch (error) {
       console.log(error);
+      //alert(`Error: ${error.response ? error.response.data.message : 'Unknown error occurred'}`);
     }
   };
-
-  /*async () => {
-    const record = {
-      type: operationType,
-      values: values,
-    };
-    console.log("Enviando al backend:", record);
-    await createOperation(record); // Enviamos la operación al backend
-    setValues([]); // Resetea los valores después de enviar
-  };*/
 
   return (
     <OperationContext.Provider
